@@ -1,53 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # NOTES
-# 
+# NOTES
 # Search for XXX for todos and questions
 
-# In[ ]:
 
-
-# For sending GET requests from the API
-import requests
-# For saving access tokens and for file management when creating and adding to the dataset
-import os
-# For creating list of files in final harvest:
-import glob
-# For dealing with json responses we receive from the API
-import json
-# For displaying the data after
-import pandas as pd
+import requests # For sending GET requests from the API
+import os # For saving access tokens and for file management when creating and adding to the dataset
+import glob # For creating list of files in final harvest
+import json # For dealing with json responses we receive from the API
+import pandas as pd # For displaying the data after
 # To avoid SettingWithCopyWarning, cf. https://stackoverflow.com/a/20627316/1654116
-#pd.options.mode.chained_assignment = None  # default='warn'
-# For saving the response data in CSV formatc
-import csv
-# For parsing the dates received from twitter in readable formats
-import datetime
+# pd.options.mode.chained_assignment = None  # default='warn'
+import csv # For saving the response data in CSV format
+import datetime # For parsing the dates received from Twitter in readable formats
 import dateutil.parser
 import unicodedata
-#To add wait time between requests
-import time
+import time # To add wait time between requests
 import numpy as np
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-# # Twitter Authorization and Connection Setup
-
-# In[ ]:
-
-
+# Twitter Authorization and Connection Setup
 def create_headers(bearer_token):
     headers = {"Authorization": "Bearer {}".format(bearer_token)}
     return headers
 
-
-# # Time Functions: Returns time in the string format accepted by Twitter API2.
-
-# In[14]:
-
-
+# Time Functions: Returns time in the string format accepted by Twitter API2.
 def time_10sec_ago():
     utc_now = datetime.datetime.utcnow()
     utc_10ago = utc_now - datetime.timedelta(seconds=10)
@@ -65,12 +45,9 @@ def twitter_time(year, month, day, hour, minute):
 # # Functions to Pull Tweets
 # 
 # The following allows pulling tweets from some time period that meets some keyword.
-# The reustls are retreieved from Twitter in blocks of 500 (the max. allowed per request), in a JSON format. Using next page tokens, periods/keywords with more tweets may be collected in one go. One joint CSV file is produced per such pull.
+# The resuæts are retreieved from Twitter in blocks of 500 (the max. allowed per request), in a JSON format. Using next page tokens, periods/keywords with more tweets may be collected in one go. One joint CSV file is produced per such pull.
 # 
 # The functions are based on https://towardsdatascience.com/an-extensive-guide-to-collecting-tweets-from-twitter-api-v2-for-academic-research-using-python-3-518fcb71df2a .
-
-# In[ ]:
-
 
 # Create search all tweets endpoint URL to connect to 
 def create_search_tweets_url(keyword, start_date, end_date):
@@ -91,87 +68,63 @@ def create_search_tweets_url(keyword, start_date, end_date):
     return (search_url, query_params)
 
 
-# In[ ]:
-
 
 # Retrieve response from endpoint, in JSON format.
 def connect_to_endpoint(url, headers, params, next_token = None):
     params['next_token'] = next_token   #params object received from create_search_tweets_url function
-    response = requests.request("GET", url, headers = headers, params = params) # XXX Why `headers = headers` works when `headers = whatever` does not
-                                                                                 # even though both `headers` and `whatever` are undefined, I don't know.
-                                                                                 # Why also must function have default argument here, I don't know,
-                                                                                 # but without it complains about being fed too many arguments.
-                                                                                 # Maybe `headers` is defined locally in function?
+    response = requests.request("GET", url, headers = headers, params = params)
+        # XXX Why `headers = headers` works when `headers = whatever` does not                                                # even though both `headers` and `whatever` are undefined, I don't know.
+        # Why also must function have default argument here, I don't know,
+        # but without it complains about being fed too many arguments.
+        # Maybe `headers` is defined locally in function?
     print("Endpoint Response Code: " + str(response.status_code))
     if response.status_code != 200:
         raise Exception(response.status_code, response.text)
     return response.json()
 
 
-# In[ ]:
-
-
 # Save JSON response to CSV file.
 def append_to_csv(json_response, fileName):
-
-    #A counter variable
-    counter = 0
-
+    counter = 0 # A counter variable
     #Open OR create the target CSV file
     csvFile = open(fileName, "a", newline="", encoding='utf-8')
     csvWriter = csv.writer(csvFile)
-
     #Loop through each tweet
     for tweet in json_response['data']:
-        
         # We will create a variable for each since some of the keys might not exist for some tweets
         # So we will account for that
 
         # 1. Author ID
         author_id = tweet['author_id']
-
         # 2. Time created
         created_at = dateutil.parser.parse(tweet['created_at'])
-
         # 3. Geolocation
         if ('geo' in tweet):   
             geo = tweet['geo']['place_id']
         else:
             geo = " "
-
         # 4. Tweet ID
         tweet_id = tweet['id']
-
         # 5. Language
         lang = tweet['lang']
-
         # 6. Tweet metrics
         retweet_count = tweet['public_metrics']['retweet_count']
         reply_count = tweet['public_metrics']['reply_count']
         like_count = tweet['public_metrics']['like_count']
         quote_count = tweet['public_metrics']['quote_count']
-
         # 7. source
         source = tweet['source']
-
         # 8. Tweet text
         text = tweet['text']
-        
         # Assemble all data in a list
         res = [author_id, created_at, geo, tweet_id, lang, like_count, quote_count, reply_count, retweet_count, source, text]
-        
         # Append the result to the CSV file
         csvWriter.writerow(res)
         counter += 1
-
     # When done, close the CSV file
     csvFile.close()
-
     # Print the number of tweets for this iteration
     print("# of Tweets added from this response: ", counter)
-
-
-# In[ ]:
 
 
 # Collect tweets using page tokens. Each page token takes 1 request. Each request pulls `max_results = 500` tweets (cf. `query_params`).
@@ -184,8 +137,6 @@ def pull_loop(keyWord, startTime, endTime, csvFileName, headers):
     
     # Check if flag is true
     while flag:
-#        print("-------------------")
-#        print("Token: ", next_token)
         url = create_search_tweets_url(keyWord, startTime, endTime)
         json_response = connect_to_endpoint(url[0], headers, url[1], next_token)
         result_count = json_response['meta']['result_count']
@@ -193,23 +144,18 @@ def pull_loop(keyWord, startTime, endTime, csvFileName, headers):
         if 'next_token' in json_response['meta']:
             # Save the token to use for next call
             next_token = json_response['meta']['next_token']
-#            print("Next Token: ", next_token)
             if result_count is not None and result_count > 0 and next_token is not None:
                 print("Start Date: ", startTime)
                 append_to_csv(json_response, csvFileName)
                 total_tweets += result_count
                 print("# of Tweets to look at in this loop: ", total_tweets)
-#                print("-------------------")
                 time.sleep(2)                
         # If no next token exists
         else:
             if result_count is not None and result_count > 0:
-#                print("-------------------")
-#                print("Start Time: ", startTime)
                 append_to_csv(json_response, csvFileName)
                 total_tweets += result_count
                 print("# of Tweets to look at in this loop: ", total_tweets)
-#                print("-------------------")
                 time.sleep(2)
                 
             #Since this is the final request, turn flag to false to move to the next time period.
@@ -217,16 +163,12 @@ def pull_loop(keyWord, startTime, endTime, csvFileName, headers):
             next_token = None
 
     print("Total # of Tweets looked at in this loop: ", total_tweets)
-#    print("End Time: ", endTime)
 
 
-# # Functions to Collect Linking Users
-# 
+### Functions to Collect Linking Users
+ 
 # *API man pages* https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users
 # "You will receive the most recent 100 users who liked the specified Tweet."
-
-# In[ ]:
-
 
 def create_likers_endpoint_url(tweet_id):
     string1 = "https://api.twitter.com/2/tweets/"
@@ -236,10 +178,6 @@ def create_likers_endpoint_url(tweet_id):
 
     return (endpoint_url)
 
-
-# In[ ]:
-
-
 def connect_to_likers_endpoint(url, headers, next_token = None):
     response = requests.request("GET", url, headers = headers)
     print("Endpoint Response Code: " + str(response.status_code))
@@ -247,21 +185,14 @@ def connect_to_likers_endpoint(url, headers, next_token = None):
         raise Exception(response.status_code, response.text)
     return response.json()
 
-
-# In[ ]:
-
-
 # Get the usernames of 100 most recent liking users of a single tweet_id
 def get_likers_single(tweet_id, headers):
-    
     # Create endpoint URL from tweet ID:
     like_url = create_likers_endpoint_url(tweet_id)
     # Request likers info:
     json_likers_response = connect_to_likers_endpoint(like_url, headers)
-    
     # Initiate empty list of likers:
     likers = []
-    
     # This case avoids KeyErrors due to deleted tweets and tracks deleted tweet with fake user.
     if 'errors' in json_likers_response: # Check if 'errors' key is in the response. 
         print('AwarenessRequired: Errors in json_likers_response:')
@@ -281,20 +212,15 @@ def get_likers_single(tweet_id, headers):
     else:
         print('AwarenessRequired: This case should hopefully not arise.')
         likers = ['AwarenessRequired_Liking_Users_Unknown_Case']
-    
+
     return likers
-
-
-# In[ ]:
-
 
 # Get the 100 most recent liking users of every tweet_id from the dataframe tweets_df
 # tweets_df is assumed to have tweet_ids as indices (and thus fits the log, alarm and react functions below).
 # tweets_df is appended with a column of 100 most recent likers and returned.
 def get_likers_many(tweets_df, headers):
-    
     # Add new column of empty lists:
-    tweets_df = tweets_df.assign(likers='0') #Add new column with all zero's
+    tweets_df = tweets_df.assign(likers='0') # Add new column with all zero's
     the_empty_list = [] 
     tweets_df['likers'] = [the_empty_list for _ in range(len(tweets_df))] # Change all values to []
     
@@ -305,17 +231,13 @@ def get_likers_many(tweets_df, headers):
     return (tweets_df)
 
 
-# ## Liking: Logs, Log Updating, Alarms and Reaction to Alarms
-# 
+## Liking: Logs, Log Updating, Alarms and Reaction to Alarms
+ 
 # We work with a log of tweet ids, how many likes they have now (`like_count`), and how many likes they had last time we collected their liking users (`saved_at`). The number of new like `like_count - saved_at` is referred to as the `delta`.
-# 
+ 
 # 1. Function "update_log" takes an old log and adds new tweets, and updates old tweet like_count
 # 2. Function "alarms" takes a log, calculates deltas (difference between like_count and saved_like_count) and returns raised alarms.
 # 3. Function "react" takes a log, checks for alarms using "alarms" and acts on Top X by saving liking users to file, and updating the log's saved_at value for the tweet.
-# 
-
-# In[ ]:
-
 
 # Takes as input an old log (which may be empty) of tweets, like_counts and saved_ats and a dataframe of tweets in the format of e.g. a CSV file from `pull_loop` read to dataframe.
 # Returns a new log, with new tweets added and like_counts updated for all tweets.
@@ -323,52 +245,38 @@ def get_likers_many(tweets_df, headers):
 def likers_update_log(oldLog, newTweets):
     # Set tweet_id as index, drop 'id' column (else, set "drop = False"):
     newTweets.set_index('id', inplace=True)
-    ###
     #    Above causes error on second use on same newTweets: "No 'id' column..."
     #    I don't know what to do about that.
     #    That usage shouldn't happen in when actually running things.
-    ###
 
     newLog = oldLog # To be updated and returned
     notOld = pd.DataFrame(data={'like_count': [], 'saved_at': []}) # Initate df for new tweets WITHOUT ID
     
     for tweet in newTweets.index:
         if tweet in oldLog.index:
-#            print(tweet, "is in oldLog: ", tweet in oldLog.index, "---- so OLD")
             # update like_count:
             newLog['like_count'].loc[tweet] = newTweets['like_count'].loc[tweet]
             
         else: # If the tweet is new:
-#            print(tweet, "is new")
             # This is the GOOD SUBSETTING SYNTAX that returns dataframe: newTweets.loc[[tweet],['like_count', 'id', ...! ]]
             newSingle = newTweets.loc[[tweet],['like_count']] # make dateframe of id index and like_count
             newSingle['saved_at'] = 0                             # add that it has not been saved before
             notOld = notOld.append(newSingle, ignore_index = False)  # append this to dataframe of new tweets.
                                                        # ignore_index = False: INDICES ARE NOT RESET to 0...n but keep ID value
-              
     newLog = newLog.append(notOld, ignore_index = False) # Append new tweets, AND DON'T RESET INDICES!
                                                          # Pssst: "ignore_idex = False" is the default, so can be omitted
-        
     newLog = newLog.astype(int) # makes values integer, not float.
-    
     return (newLog)
-
-
-# In[ ]:
 
 
 # Compares the `delta`s = `like_count - saved_at`s for a log with the alarm level set in parameters.
 # Takes a log and integer as input, and
 # returns a dataframe of tweets with alarmingly high delta, with tweet_id as index.
-
 def likers_alarms(Log, alarm_level): # alarm_level is how high delta should we react to
-
     alarmsRaised = pd.DataFrame(data={'delta': []}) # Initate df for raised alarms, tweet_id will be index
-
     for tweet in Log.index:
         delta = (Log.like_count[tweet] - Log.saved_at[tweet])
         if delta >= alarm_level:
-            # print(tweet, "raises alarm")
             newAlarm = Log.loc[[tweet],['like_count']] # make tmp dateframe of id index and like_count
             newAlarm['delta'] = delta # add the delta value
             newAlarm = newAlarm.drop(columns = ['like_count']) # drop the like_count
@@ -384,10 +292,8 @@ def likers_alarms(Log, alarm_level): # alarm_level is how high delta should we r
     return (alarmsRaised)
 
 
-# In[ ]:
 
-
-# Connects to Twitter endpoint and collects 100 most recent liking users of the `top` most alarmingly high delta tweets for the log.
+### Connects to Twitter endpoint and collects 100 most recent liking users of the `top` most alarmingly high delta tweets for the log.
 
 # Takes as input a log, an alarm_level integer, a top integer, and heades for authorization.
 # Finds the tweets in the log with alarmingly high deltas, 
@@ -401,7 +307,6 @@ def likers_react(Log, alarm_level, top, headers):
     
     if len(alarms_raised) == 0:
         print("No likers alarms are raised")
-    
     else:
         # We sort the raised alarms by imporatance, so high delta comes first:
         sorted_alarms = alarms_raised.sort_values(by=['delta'], ascending=False)
@@ -424,14 +329,11 @@ def likers_react(Log, alarm_level, top, headers):
     return (Log)
 
 
-# # Collect Retweeting Users
+### Collect Retweeting Users
 # 
 # This is a renamed function-for-function copy of the functions for liking users, changed to run for retweeting users.
 # 
 # XXX: Todo: Since the logic of the two processes are so similar, some fuctions can serve a double purpose. This has not been implemented yet, as it requires some careful rewritting to ensure that the two processes of getting liking usersand getting retweeting users do not intertwine in unintended ways.
-
-# In[ ]:
-
 
 def create_retweeters_endpoint_url(tweet_id):
     string1 = "https://api.twitter.com/2/tweets/"
@@ -441,10 +343,6 @@ def create_retweeters_endpoint_url(tweet_id):
 
     return (endpoint_url)
 
-
-# In[ ]:
-
-
 def connect_to_retweeters_endpoint(url, headers, next_token = None):
     response = requests.request("GET", url, headers = headers)
     print("Endpoint Response Code: " + str(response.status_code))
@@ -452,36 +350,28 @@ def connect_to_retweeters_endpoint(url, headers, next_token = None):
         raise Exception(response.status_code, response.text)
     return response.json()
 
-
-# In[ ]:
-
-
 # Get the usernames of 100 most recent liking users of a single tweet_id
 def get_retweeters_single(tweet_id, headers):
     
-    # Create endpoint URL from tweet ID:
-    like_url = create_retweeters_endpoint_url(tweet_id)
-    # Request likers info:
-    json_retweeters_response = connect_to_retweeters_endpoint(like_url, headers)
-    
-    # Initiate empty list of likers:
-    retweeters = []
+    like_url = create_retweeters_endpoint_url(tweet_id) # Create endpoint URL from tweet ID
+    json_retweeters_response = connect_to_retweeters_endpoint(like_url, headers) # Request likers info
+    retweeters = [] # Initiate empty list of likers
     
     # This case avoids KeyErrors due to deleted tweets and tracks deleted tweet with fake user.
     if 'errors' in json_retweeters_response: # Check if 'errors' key is in the response. 
         print('AwarenessRequired: Errors in json_likers_response:')
         print(json_retweeters_response)
         retweeters = ['AwarenessRequired_Retweeters_of_Deleted_Tweet']
-    #
+    
     # Main case 1: Pull retweeters, if any exist.
     elif json_retweeters_response['meta']['result_count'] > 0: # We could add "meta in .." test here, too. R has not done so we know if we encounter missing meta key while tweet exists.
         for user in range(len(json_retweeters_response['data'])):
             retweeters.append(json_retweeters_response['data'][user]['username'])
-    #
+    
     # Main case 2: If not liking users, return empty list.
     elif json_retweeters_response['meta']['result_count'] == 0:
         retweeters = []
-    #
+    
     # Hopefully we will not see this:
     else:
         print('AwarenessRequired: This case should hopefully not arise.')
@@ -490,10 +380,8 @@ def get_retweeters_single(tweet_id, headers):
     return retweeters
 
 
-# In[ ]:
+### Get the 100 most recent liking users of every tweet_id from the dataframe tweets_df
 
-
-# Get the 100 most recent liking users of every tweet_id from the dataframe tweets_df
 # tweets_df is assumed to have tweet_ids as indices (and thus fits the log, alarm and react functions below).
 # tweets_df is appended with a column of 100 most recent likers and returned.
 def get_retweeters_many(tweets_df, headers):
@@ -510,21 +398,18 @@ def get_retweeters_many(tweets_df, headers):
     return (tweets_df)
 
 
-# # Logs, Log Updating, Alarms and Reaction to Alarms
-# 
+### Logs, Log Updating, Alarms and Reaction to Alarms
+ 
 # We work with a log of tweet ids, how many likes they have now (`like_count`), and how many likes they had last time we collected their liking users (`saved_at`). The number of new like `like_count - saved_at` is referred to as the `delta`.
-# 
+ 
 # 1. Function "update_log" takes an old log and adds new tweets, and updates old tweet like_count
 # 2. Function "alarms" takes a log, calculates deltas (difference between like_count and saved_like_count) and returns raised alarms.
 # 3. Function "react" takes a log, checks for alarms using "alarms" and acts on Top X by saving liking users to file, and updating the log's saved_at value for the tweet.
-# 
-
-# In[ ]:
+ 
 
 
 # Takes as input an old log (which may be empty) of tweets, like_counts and saved_ats and a dataframe of tweets in the format of e.g. a CSV file from `pull_loop` read to dataframe.
 # Returns a new log, with new tweets added and like_counts updated for all tweets.
-
 def retweeters_update_log(oldLog, newTweets):
     # Set tweet_id as index, drop 'id' column (else, set "drop = False"):
     newTweets.set_index('id', inplace=True)
@@ -539,12 +424,10 @@ def retweeters_update_log(oldLog, newTweets):
     
     for tweet in newTweets.index:
         if tweet in oldLog.index:
-#            print(tweet, "is in oldLog: ", tweet in oldLog.index, "---- so OLD")
             # update retweet_count:
             newLog['retweet_count'].loc[tweet] = newTweets['retweet_count'].loc[tweet]
             
         else: # If the tweet is new:
-#            print(tweet, "is new")
             # This is the GOOD SUBSETTING SYNTAX that returns dataframe: newTweets.loc[[tweet],['like_count', 'id', ...! ]]
             newSingle = newTweets.loc[[tweet],['retweet_count']] # make dateframe of id index and like_count
             newSingle['saved_at'] = 0                             # add that it has not been saved before
@@ -559,17 +442,12 @@ def retweeters_update_log(oldLog, newTweets):
     return (newLog)
 
 
-# In[ ]:
-
-
 # Compares the `delta`s = `like_count - saved_at`s for a log with the alarm level set in parameters.
 # Takes a log and integer as input, and
 # returns a dataframe of tweets with alarmingly high delta, with tweet_id as index.
 
 def retweeters_alarms(Log, alarm_level): # alarm_level is how high delta should we react to
-
     alarmsRaised = pd.DataFrame(data={'delta': []}) # Initate df for raised alarms, tweet_id will be index
-
     for tweet in Log.index:
         delta = (Log.retweet_count[tweet] - Log.saved_at[tweet])
         if delta >= alarm_level:
@@ -589,10 +467,7 @@ def retweeters_alarms(Log, alarm_level): # alarm_level is how high delta should 
     return (alarmsRaised)
 
 
-# In[ ]:
-
-
-# Connects to Twitter endpoint and collects 100 most recent retweeting users of the `top` most alarmingly high delta tweets for the log.
+### Connects to Twitter endpoint and collects 100 most recent retweeting users of the `top` most alarmingly high delta tweets for the log.
 
 # Takes as input a log, an alarm_level integer, a top integer, and heades for authorization.
 # Finds the tweets in the log with alarmingly high deltas, 
@@ -626,9 +501,7 @@ def retweeters_react(Log, alarm_level, top, headers):
     return (Log)
 
 
-# # Control loop
-
-# In[ ]:
+### Control loop
 
 
 def control_loop(headersList, keyWord, startTime, observationTime, tweetTrackTime, sleepTime, getLikers = True, getRetweeters = True, alarmLevel = 1, getLikersTop = 15, getRetweetersTop = 10, saveLogs = True):
@@ -663,16 +536,12 @@ def control_loop(headersList, keyWord, startTime, observationTime, tweetTrackTim
 
         # Control bearer token selection through loop counter
         loop_headers = headersList[loop_counter % len(headersList)]
-#        print('Headers:', loop_headers)
         
         # Next specifies pulling.
         #
         # If we are still in the observation period:
         if loop_startTime < startTime + observationTime: 
-            # print(loop_startTime, 'is earlier than startTime + observationTime:', startTime + observationTime)
             
-#            iteration_file = "".join(("tmp_CSVs/",iteration_time,".csv"))
-#            print("Saves to", iteration_file)
             csvFile = open(iteration_file, "a", newline="", encoding='utf-8')
             csvWriter = csv.writer(csvFile)
             
@@ -681,12 +550,9 @@ def control_loop(headersList, keyWord, startTime, observationTime, tweetTrackTim
             csvWriter.writerow(['author id', 'created_at', 'geo', 'id','lang', 'like_count', 'quote_count', 'reply_count','retweet_count','source','tweet'])
             csvFile.close()
             
-#            print("Pulling tweets in *latest of [startTime, (Now - tweetTrackTime)]*---*Now* to CSV file")
-            
             # If startTime is less than tweetTrackTime in the past, pull from startTime
             if loop_startTime - tweetTrackTime <= startTime:
                 thisPull_startTime = "".join((startTime.strftime("%Y-%m-%dT%H:%M:%S"), ".000Z"))               
-#                print("thisPull_startTime = startTime")
             # If startTime is more than tweetTrackTime in the past, pull from tweetTrackTime ago.
             else:
                 thisPull_startTime = "".join(((loop_startTime - tweetTrackTime).strftime("%Y-%m-%dT%H:%M:%S"), ".000Z"))
@@ -787,10 +653,9 @@ def control_loop(headersList, keyWord, startTime, observationTime, tweetTrackTim
     print('OBSERVATIONS CONCLUDED SUCCESSFULLY!')
 
 
-# # FINAL HARVEST FUNCTIONS
 
-# In[ ]:
 
+### FINAL HARVEST FUNCTIONS
 
 def final_harvest_setup(likers, retweeters):
     print('Final Harvest setup:')
@@ -804,9 +669,6 @@ def final_harvest_setup(likers, retweeters):
         print('    No Final Harvest selected.')
 
 
-# In[ ]:
-
-
 def ALL_tweet_ids_like_and_retweet_counts():
     newest_pull_directory = max(glob.glob('IncompletePull-*'), key=os.path.getmtime)
     path = "".join((newest_pull_directory,'/CSVs/'))
@@ -814,9 +676,6 @@ def ALL_tweet_ids_like_and_retweet_counts():
     all_tweets_df = pd.concat((pd.read_csv(f).loc[:, ['id','like_count','retweet_count']] for f in all_files))
     all_tweets_df.to_pickle('tmp_ALL_tweet_IDs_like_and_retweet_counts.pkl')
     return (all_tweets_df)
-
-
-# In[ ]:
 
 
 def max_like_counts():
@@ -831,9 +690,6 @@ def max_like_counts():
     return (max_likes)
 
 
-# In[ ]:
-
-
 def max_retweet_counts():
     if os.path.exists('tmp_ALL_tweet_IDs_like_and_retweet_counts.pkl'):
         all_tweets_df = pd.read_pickle('tmp_ALL_tweet_IDs_like_and_retweet_counts.pkl')
@@ -844,9 +700,6 @@ def max_retweet_counts():
     max_retweets = all_tweets_df.sort_values('retweet_count', ascending = False).drop_duplicates('id').sort_index()    
     max_retweets.to_pickle('tmp_all_tweet_IDs_max_retweet_counts.pkl')
     return (max_retweets)
-
-
-# In[ ]:
 
 
 def likers_final_harvest(headersList, at_least_likes):
@@ -866,7 +719,7 @@ def likers_final_harvest(headersList, at_least_likes):
     # Set tweet ID as index, drop 'id' column (else, set "drop = False"):
     final_harvest_df.set_index('id', inplace=True)
     # Add new column of empty lists, to contain last 100 likers:
-    final_harvest_df = final_harvest_df.assign(likers='0') #Add new column with all zero's
+    final_harvest_df = final_harvest_df.assign(likers='0') # Add new column with all zero's
     the_empty_list = [] 
     final_harvest_df['likers'] = [the_empty_list for _ in range(len(final_harvest_df))] # Change all values to []
     # Drop all columns except like_count and last likers:
@@ -874,7 +727,6 @@ def likers_final_harvest(headersList, at_least_likes):
     # Sort so highest like_count is on top (for aesthetics only):
     final_harvest_df = final_harvest_df.sort_values(by=['like_count'], ascending=False)
     
-  
     ## Pull Liking users and save to pkl file:
     counter_total = 0
     counter_last_sleep = 0
@@ -909,9 +761,6 @@ def likers_final_harvest(headersList, at_least_likes):
     os.rename(output_file, 'likers_final_harvest_complete.pkl')
 
 
-# In[ ]:
-
-
 def retweeters_final_harvest(headersList, at_least_retweets):
     # Load all tweets IDs and their max retweet_count:
     all_tweets_df = max_retweet_counts()
@@ -929,7 +778,7 @@ def retweeters_final_harvest(headersList, at_least_retweets):
     # Set tweet ID as index, drop 'id' column (else, set "drop = False"):
     final_harvest_df.set_index('id', inplace=True)
     # Add new column of empty lists, to contain last 100 retweeters:
-    final_harvest_df = final_harvest_df.assign(retweeters='0') #Add new column with all zero's
+    final_harvest_df = final_harvest_df.assign(retweeters='0') # Add new column with all zero's
     the_empty_list = [] 
     final_harvest_df['retweeters'] = [the_empty_list for _ in range(len(final_harvest_df))] # Change all values to []
     # Drop all columns except retweet_count and last retweeters:
@@ -970,4 +819,3 @@ def retweeters_final_harvest(headersList, at_least_retweets):
     if os.path.exists("tmp_retweeters_FINAL_HARVEST_INCOMPLETE"): # delete this file to tell launch command script to stop its loop.
         os.remove("tmp_retweeters_FINAL_HARVEST_INCOMPLETE")
     os.rename(output_file, 'retweeters_final_harvest_complete.pkl')
-
