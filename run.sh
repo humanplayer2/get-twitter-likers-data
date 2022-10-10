@@ -16,8 +16,7 @@ else
 fi
 
 # Remove or replace any old files, supressing error if they do not exist
-# Create temporary logs, CSV storage and indicator file
-# Create permanent data directory
+# Copy in empty temporary logs, create CSV storage and indicator file
 rm -rf tmp_CSVs tmp_Delta_logs 2>/dev/null
 rm tmp*
 rm pull_printouts.log 2>/dev/null
