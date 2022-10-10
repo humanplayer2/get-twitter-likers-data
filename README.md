@@ -58,32 +58,30 @@ This file
  If the Python script does not error, only one loop iteration
  is needed, but else it is started again, remembering its state
 
-# Parameters
+# Parameters Overview
+List mimicks the `parameters.py` files, with additional comments.
 
 ## What to pull.
 
-# Likers and/or retweeters: What do you want to pull?
+_Likers and/or retweeters: What do you want to pull?_
 my_getLikers = False
 my_getRetweeters = True
 
-# keyWord
-# What tweets are you looking for?
-my_keyWord = "#dkpol -is:retweet"
+_What tweets are you looking for?_
+`my_keyWord = "#dkpol -is:retweet"`
 
 
-# What period to pull during.
-#############################
+## What period to pull during.
+Remember: Twitter time is UTC. All times must be supplied by `datetime` and include year, month, day, hour and minute.
 
-# Remember: Twitter time is UTC. All times must be supplied by `datetime` and include year, month, day, hour and minute.
+`startTime`:
+When to start looking at tweets from?
+Intended to simultanous to launch of the script.
 
-# startTime:
-# When to start looking at tweets from?
-# Intended to simultanous to launch of the script.
-#
-# Use e.g.
-# my_startTime = datetime.datetime(2022,3,24,12,50)
-# my_startTime = datetime.datetime.utcnow() - datetime.timedelta(seconds = 20)
-#
+Use e.g.
+`my_startTime = datetime.datetime(2022,3,24,12,50)`
+`my_startTime = datetime.datetime.utcnow() - datetime.timedelta(seconds = 20)`
+
 # If using the script launch command suggested in the README.md,
 # then use a fixed startTime (e.g. datetime.datetime(2022,3,24,12,50)),
 # as the startTime will else be reset if the script is restarted due to error.
