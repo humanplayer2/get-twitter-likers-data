@@ -9,6 +9,7 @@ TODO before publishing:
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it, you need a bearer token for the Twitter _Academic Access_ API.
 
 ### To use:
+- Apply for Twitter Academic Access (TODO: URL link) to get a bearer token (perhaps one for each of your team members?)
 - Clone the repo to a local folder under which data will be saved
 - Set bearer token(s) in the `parameters.py` together with scrape parameters (see below)
 - Run `run.sh`
@@ -38,7 +39,9 @@ These caps on requests pose a number of issues that this script sidesteps.
 
 ### Issue 1: 100 most recent likers
 
-For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the besic idea of this script:
+For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the basic idea of this script:
+
+*Explain the Pull Loop, use that term.*
 
 ### Issue 2: 10.000.000 a month
 Shorter track time
@@ -55,96 +58,66 @@ This file
  1. preps the folder,
  2. starts scripting to a log file, and
  3. runs the Python script on a loop.
- If the Python script does not error, only one loop iteration
+ If the Python script does not error, only one loop iteration 
  is needed, but else it is started again, remembering its state
 
 # Parameters Overview
 List mimicks the `parameters.py` files, with additional comments.
 
-## What to pull.
+## What to pull
 
-_Likers and/or retweeters: What do you want to pull?_
-my_getLikers = False
-my_getRetweeters = True
+`my_getLikers = False` : Do you want to save liking users?
 
-_What tweets are you looking for?_
-`my_keyWord = "#dkpol -is:retweet"`
+`my_getRetweeters = True` : Do you want to save retweeting users?
 
+`my_keyWord = "#dkpol -is:retweet OR #maga"` : What tweets are you looking for?
 
-## What period to pull during.
-Remember: Twitter time is UTC. All times must be supplied by `datetime` and include year, month, day, hour and minute.
+## What period to pull during
+- Remember: Twitter time is UTC. All times must be supplied by `datetime` and include year, month, day, hour and minute.
 
-`startTime`:
-When to start looking at tweets from?
-Intended to simultanous to launch of the script.
+`my_startTime = datetime.datetime(2022,3,24,12,50)` : When to start looking at tweets from?
+- The further in the past, the higher the risk of missed likers, of course.
+- Use a fixed time point, as a relative time point (e.g. `now`) will be reset if the `.py` script is restart by the `.sh` script (e.g. in case of temporary connection error).
 
-Use e.g.
-`my_startTime = datetime.datetime(2022,3,24,12,50)`
-`my_startTime = datetime.datetime.utcnow() - datetime.timedelta(seconds = 20)`
+`my_obervationTime = datetime.timedelta(days = 7, hours = 2, minutes = 7)` : How long do should the script look for tweets?
+- The final set will contain tweets from startTime to startTime + observationTime
 
-# If using the script launch command suggested in the README.md,
-# then use a fixed startTime (e.g. datetime.datetime(2022,3,24,12,50)),
-# as the startTime will else be reset if the script is restarted due to error.
-my_startTime = datetime.datetime(2022, 5, 19, 8, 0)
-
-
-# observationTime:
-# How long do should the script look for tweets?
-# The final set will contain tweets from startTime to startTime + observationTime
-#
-#my_obervationTime = datetime.timedelta(days = 7, hours = 2, minutes = 7)
-my_observationTime = datetime.timedelta(hours = 3)
-
-
-# tweetTrackTime:
-# How long should each tweet be monitored for new likes?
-# Longer tweetTrackTime means more requests used per 15 minutes and more tweets pulled per month.
-# Mind your limis!
-my_tweetTrackTime = datetime.timedelta(hours = 2)
-
+`my_tweetTrackTime = datetime.timedelta(hours = 72)` : How long should each tweet be monitored for new likes?
+- Longer tweetTrackTime means more requests used per 15 minutes and more tweets pulled per month.
+ - (1 `TPL` request will be used per 500 tweets meets `my_keyWord`, per pull loop.)
+- Mind your limits!
 
 ## How aggressively to pull
-#*********
-# The next three parameters must be balanced against each other, Twitter pull limits,
-# and the activity of the keyWord.
-# Three Twitter limits are relevant:
-# Tweet pull limit (TPL): 10.000.000 / month
-# Tweet pull request (TPR): 300 / 15 min., each returning max. 500 tweets satisfying keyWord.
-# Liking user request (LUR): 75 / 15 min., each returning max. 100 most recent likers of a single tweet.
-#*********
+The next three parameters must be balanced against each other, Twitter pull limits, and the activity of the keyWord.
 
-# alarmLevel
-# How many new likes must a tweet have gotten before we consider pulling ots 100 most recent liking users?
-# A balance of risk vs. LUR limit.
-# A choice of 95 risks missing out on some liking users as the tweet may have gotten 105 new likes before we get to it.
-# A choice of 1 is unrisky, but may reach LUR limit quickly.
-my_alarmLevel = 1 # 10
+Three Twitter limits are relevant:
+1. Tweet pull limit (`TPL`): 10.000.000 / month
+2. Tweet pull request (`TPR`): 300 / 15 min., each returning max. 500 tweets satisfying keyWord.
+3. Liking user request (`LUR`): 75 / 15 min., each returning max. 100 most recent likers of a single tweet.
 
+`my_alarmLevel = 3` : How many new likes/retweets _since last time we pulled its 100 most recent liking users_ must a tweet have gotten before we consider pulling them again?
+- A balance of risk vs. `LUR` limit.
+- A choice of 95 risks missing out on some liking users as the tweet may have gotten 105 new likes before we get to it.
+- A choice of 1 is unrisky, but may reach `LUR` limit quickly.
 
-# topGet
-# How many of the tweets with more than alarmLevel new likes should we get the liking users of?
-# We pull the liking users of the tweets with most new likes first, but given LUR limit,
-# maybe not all tweets that have raised an alarm can be gotten within 15 min.
-#my_topGet = 5 # 23
-# Remember: my_getLikersTop + my_getRetweetersTop >= 75*(my_sleepTime/(15*60))
-my_getLikersTop = 1
-my_getRetweetersTop = 1
+`my_getLikersTop = 25` : How many of the tweets with more than alarmLevel new likes should we get the liking users of? 
+`my_getRetweetersTop = 10` : Ditto for retweeters.
+- We pull the liking users of the tweets with most new likes first, but given `LUR` limit, maybe not all tweets that have raised an alarm can have their likers pulled within 15 min.
+- Again: Mind your limits! Safety rule is: `my_getLikersTop + my_getRetweetersTop <= 75*(my_sleepTime/(15*60))*len(tokenList)`
 
-my_getLikersTop + my_getRetweetersTop >= 75*(my_sleepTime/(15*60))*len(tokenList)
+`my_sleepTime = 5*60` : How many seconds should we wait between two pull loops?
+- This should be balanced with alarmLevel, topGet and the number of bearer tokens available.
+- For example:
+    - *TODO: change param names here to those above:* 1 bearer token, `alarmLevel = 1`, `topGet = 75`, `sleepTime = 1` and a search query that has some activity will quickly break `LUR` limit.
+    - 3 bearer tokens, `alarmLevel = 1`, `topGet = 24`, `sleepTime = 5*60` will not.
+- Lower `sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
+- Higher `sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
 
-# sleepTime
-# How many seconds should we wait between two pulls?
-# This should be balanced with alarmLevel, topGet and the number of bearer tokens available.
-# For example:
-    # 1 bearer token, alarmLevel = 1, topGet = 75, sleepTime = 1 and a search query that has some life
-    # will quickly break LUR limit.
-    # 3 bearer tokens, alarmLevel = 1, topGet = 24, sleepTime = 5*60 will not.
-# If more than 500 tweets meets keyWord, more than 1 request will be used per pull.
-# Lower sleepTime uses more TPR, and pulls more tweets, counting towards TPL.
-# Higher sleepTime means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
-my_sleepTime = 10# 5*60  # 5*60 as we have run with 3 bearer tokens
+## Logging 
 
-# **** Save Delta logs or not?
-my_saveLogs = True
-# Might end up taking up a lot of harddrive space for long running pulls.
-# Useful to estimate parameters, as the data allows you to check e..g how many times a too high delta was seen.
+`my_saveLogs = True` :  Save "Delta" logs or not?
+- Delta logs tell keep track of how many new likers/retweeters a tweet has gotten since last its liking/retweeting users were pulled.
+- Useful to check if a pull for sure missed out on some likers/retweeters.
+ - Useful to estimate parameters, as the data allows you to check e.g. how many times a too high delta was seen. 
+- Might end up taking up a lot of harddrive space for long running pulls.
+
