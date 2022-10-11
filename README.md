@@ -1,18 +1,18 @@
 # Twitter Perpetual
 
-TODO before publishing:
-- I have exported the .ipynb file to .py and omitted the .ipynb. To do after that:
-  - Clean up the exported .py files
-- Last: Remove own bearer tokens from `parameters.py`.
+TODO before publishing v0.1:
+- Find a good name.
+- Write a nice README.
 
-## TL;DR // Quickstart
-This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it, you need a bearer token for the Twitter _Academic Access_ API.
+# TL;DR // Quickstart
+This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it:
 
-### To use:
-- Apply for Twitter Academic Access (TODO: URL link) to get a bearer token (perhaps one for each of your team members?)
-- Clone the repo to a local folder under which data will be saved
-- Set bearer token(s) in the `parameters.py` together with scrape parameters (see below)
-- Run `run.sh`
+1. Apply for [Academic Research access](https://developer.twitter.com/en/products/twitter-api/academic-research) to the Twitter API v2. This givs you a bearer token. Perhaps have your team members apply, too. The script can use more than one bearer token at a time, thus increasing pull limits.
+2. Install the Python3 dependencies for the script (see below).
+3. Clone this repo to a local folder under which data will be saved.
+4. Set bearer token(s) in the `parameters.py` together with scrape parameters (see below).
+5. Run `run.sh` in a terminal.
+6. Analyze your data.
 
 ### TODO: Dependencies:
 python3
