@@ -1,7 +1,7 @@
 # Twitter Perpetual
 
 TODO before publishing v0.1:
-- Find a good name.
+- Find a good name. Candidates: CIBS-22-Twitter-Likes; CIBS-22-Likes; CIBS-22-Likes-Retweets; Twitter-Likes-22, Likes-Retweets-22, 
 - Write a nice README.
 
 # TL;DR // Quickstart
@@ -18,20 +18,20 @@ This script live scrapes the IDs of liking and/or retweeting users of tweets tha
 python3
 pip
 python3 -m pip install --upgrade pip ...
-python dependencies: datetime (in parameters.py)
+python dependencies (pip install the following packages): datetime, requests, os, glob, json, pandas, csv, dateutil.parser, unicodedata, time, numpy, warnings
 
 ## Long Version
 
-All below refers to Twitter with _Academic Research_ access. You have to apply for that here: *TODO*
+All below refers to Twitter's v2 public API for _Academic Research access_. You have to apply for that [here](https://developer.twitter.com/en/products/twitter-api/academic-research/application-info).
 
 The script works for getting the IDs of both liking users and reweeting users. The below omits reference to retweeting users to simplify the text.
 
 ### Raison d'Etre: Twitter Data Restrictions
-Those interested in logging a full list of all liking (retweeting) users of a tweet face soon face Twitter data restrictions.
+Those interested in logging a full list of all liking (retweeting) tusers of a tweet face soon face Twitter data restrictions.
 
-At time of writing, Twitter has the following restrictions on requests to the API:
-- Tweet requests per 30 days: 10.000.000. One request returns ...
-- *TODO*
+At time of writing, Twitter has the following rate restrictions and caps on requests to the Academic Research access API:
+- Tweets per 30 days are capped at 10.000.000, i.e. one can pull maximally 10.000.000 tweet objects per month ([documentation:](https://developer.twitter.com/en/docs/twitter-api/tweet-caps))
+- The endpoints to get [liking users](https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users) and [retweeting users](https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by) are capped at 75 requests per 15 minute window, delivereing the most recent liking/retweeting users per tweet per request.
 
 Hence, there is no way to get the IDs of *all* liking users of a tweet if it already has 105 likes.
 
@@ -41,7 +41,17 @@ These caps on requests pose a number of issues that this script sidesteps.
 
 For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the basic idea of this script:
 
-*Explain the Pull Loop, use that term.*
+During the observation period, with a fixed time interval p (e.g. every 5 min.), the script executes a pull. Each pull loop contains four steps:
+
+1. It logs tweets posted since the last pull that satisfy the query, and logs their current number of likes (like count).
+
+2. It updates the logged like count of previously logged tweets. Only tweets that are recent enough are tracked (e.g., posted within the last 48 hours).
+
+3. For each logged tweet, it compares the tweet's new like count to its like count at the last pull where the script requested the liking users of the tweet (0 if the liking users have never been requested). Call the numerical difference between these two like counts the tweet's delta.
+
+4. It requests the 100 most recent liking users of the top n tweets with the highest delta above a set threshold (e.g., has minimum 25 new likes).
+
+At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. Pulling liking and retweeting users devours from the same pool of request resources.
 
 ### Issue 2: 10.000.000 a month
 Shorter track time
