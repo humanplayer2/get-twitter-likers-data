@@ -2,7 +2,7 @@
 
 This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as:  
 
-Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022.
+Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/)<!---, DOI: tbd-->, 2022.
 
 ```
   @misc{JahnRendsvig22,  
@@ -11,8 +11,8 @@ Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repositor
     year = {2022},  
     publisher = {GitHub},  
     journal = {GitHub repository},  
-    howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},  
-    doi = {tbd}  
+    howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}}<!---,
+    doi = {tbd}-->
   }
  ```
 
