@@ -11,11 +11,11 @@ Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repositor
     year = {2022},  
     publisher = {GitHub},  
     journal = {GitHub repository},  
-    howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}}<!---,
-    doi = {tbd}-->
+    howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}}
   }
  ```
-
+<!---, add doi when ready
+    doi = {tbd}-->
 # License
 This project is licensed under the terms of the GNU General Public License v3.0  (`gpl-3.0`). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
 
