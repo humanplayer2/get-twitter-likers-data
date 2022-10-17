@@ -29,7 +29,7 @@ This script live scrapes the IDs of liking and/or retweeting users of tweets tha
 5. Run `run.sh` in a terminal.
 6. Analyze your data.
 
-### TODO: Dependencies:
+### Dependencies:
 `python3`  
 `pip`  
 `python3 -m pip install --upgrade pip`  
@@ -52,7 +52,7 @@ Hence, there is no way to get the IDs of *all* liking users of a tweet if it alr
 
 These caps on requests pose a number of issues that this script sidesteps.
 
-### Issue 1: 100 most recent likers: time intervals
+### Issue 1: 100 most recent likers: Time intervals
 
 For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the basic idea of this script:
 
@@ -66,9 +66,9 @@ During the observation period, with a fixed time interval p (e.g. every 5 min.),
 
 4. It requests the 100 most recent liking users of the top n tweets with the highest delta above a set threshold (e.g., has minimum 25 new likes).
 
-At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO: double check this following sentence!_ Pulling liking and retweeting users devours from the same pool of request resources.
+At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO_conform: Pulling liking and retweeting users devours from the same bucket of request resources.
 
-### Issue 2: 10.000.000 a month: shorter tweet track time
+### Issue 2: 10.000.000 a month: Shorter tweet track time
 If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Parameters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
 
 ### Issue 3: Still not enough: Bearer token cycling
