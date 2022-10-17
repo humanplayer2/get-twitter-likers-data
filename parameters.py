@@ -17,9 +17,6 @@ token3 = ''
 # tokenList = [token0, token1, token2, token3]
 my_tokenList = [token1]
 
-# The script cycles through tokenList and uses each bearer token approx. evenly.
-
-
 #####################################
 ## PARAMETERS: USER INPUT REQUIRED ##
 #####################################
@@ -39,9 +36,9 @@ my_tweetTrackTime  = datetime.timedelta(days = 0, hours = 1, minutes = 1)
 my_alarmLevel = 1
 my_getLikersTop = 1
 my_getRetweetersTop = 1
-# Remember Limits: my_getLikersTop + my_getRetweetersTop >= 75*(my_sleepTime/(15*60))*len(tokenList)
+# Remember limits: my_getLikersTop <= 75*(my_sleepTime/(15*60))*len(tokenList)
 
-my_sleepTime = 30 # 5*60  # 5*60 as we have run with 3 bearer tokens
+my_sleepTime = 30
 
 # FINAL HARVESTS
 my_likersFinalHarvest = True

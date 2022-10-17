@@ -26,7 +26,7 @@ cp resources/tmp_log_retweeters_deltas.pkl tmp_log_retweeters_deltas.pkl
 cp resources/tmp_loop_counter.pkl tmp_loop_counter.pkl
 STARTTIME="$(date +"%d-%m-%Y-%T")"
 DIR="IncompletePull-$STARTTIME/"
-DIR2="Pull-$STARTTIME/"
+DIR2="CompletePull-$STARTTIME/"
 mkdir $DIR
 mkdir tmp_CSVs tmp_CSVs/Likers_of_alarms tmp_CSVs/Retweeters_of_alarms tmp_Delta_logs tmp_Delta_logs/Likers tmp_Delta_logs/Retweeters
 touch tmp_PULL_INCOMPLETE
