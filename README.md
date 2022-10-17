@@ -1,7 +1,7 @@
 # Twitter Perpetual
 
 TODO before publishing v0.1:
-- Find a good name. Candidates: CIBS-22-Twitter-Likes; CIBS-22-Likes; CIBS-22-Likes-Retweets; Twitter-Likes-22, Likes-Retweets-22, 
+Name: Get-Twitter-Likers-Data
 - Write a nice README.
 
 # TL;DR // Quickstart
