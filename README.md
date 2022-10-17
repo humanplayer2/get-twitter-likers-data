@@ -1,8 +1,9 @@
-# Twitter Perpetual
+# Get-Twitter-Likers-Data
 
-TODO before publishing v0.1:
-Name: Get-Twitter-Likers-Data
-- Write a nice README.
+This is the repository *Get-Twitter-Likers-Data*. If you use this code in your research, please cite:
+
+# License
+This project is licensed under the terms of the GNU General Public License v3.0. See for [LICENSE]() rights and limitations.
 
 # TL;DR // Quickstart
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it:
@@ -68,7 +69,7 @@ This file
  1. preps the folder,
  2. starts scripting to a log file, and
  3. runs the Python script on a loop.
- If the Python script does not error, only one loop iteration 
+ If the Python script does not error, only one loop iteration
  is needed, but else it is started again, remembering its state
 
 # Parameters Overview
@@ -110,7 +111,7 @@ Three Twitter limits are relevant:
 - A choice of 95 risks missing out on some liking users as the tweet may have gotten 105 new likes before we get to it.
 - A choice of 1 is unrisky, but may reach `LUR` limit quickly.
 
-`my_getLikersTop = 25` : How many of the tweets with more than alarmLevel new likes should we get the liking users of? 
+`my_getLikersTop = 25` : How many of the tweets with more than alarmLevel new likes should we get the liking users of?
 `my_getRetweetersTop = 10` : Ditto for retweeters.
 - We pull the liking users of the tweets with most new likes first, but given `LUR` limit, maybe not all tweets that have raised an alarm can have their likers pulled within 15 min.
 - Again: Mind your limits! Safety rule is: `my_getLikersTop + my_getRetweetersTop <= 75*(my_sleepTime/(15*60))*len(tokenList)`
@@ -123,11 +124,10 @@ Three Twitter limits are relevant:
 - Lower `sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
 - Higher `sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
 
-## Logging 
+## Logging
 
 `my_saveLogs = True` :  Save "Delta" logs or not?
 - Delta logs tell keep track of how many new likers/retweeters a tweet has gotten since last its liking/retweeting users were pulled.
 - Useful to check if a pull for sure missed out on some likers/retweeters.
- - Useful to estimate parameters, as the data allows you to check e.g. how many times a too high delta was seen. 
+ - Useful to estimate parameters, as the data allows you to check e.g. how many times a too high delta was seen.
 - Might end up taking up a lot of harddrive space for long running pulls.
-
