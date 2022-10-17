@@ -1,16 +1,16 @@
 # Get-Twitter-Likers-Data
 
-This is the repository *Get-Twitter-Likers-Data*. If you use this code in your research, please cite
+This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as _Jahn, L. and Rendsvig, R.K., "Get-Twitter-Likers-Data, GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022._  
 
-@misc{Charles2013,
-  author = {Charles, P.W.D.},
-  title = {Project Title},
-  year = {2013},
+`@misc{JahnRendsvig22,
+  author = {{Jahn, Laura and Rendsvig, Rasmus K.}},
+  title = {Get-Twitter-Likers-Data},
+  year = {2022},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/charlespwd/project-title}},
-  commit = {4f57d6a0e4c030202a07a60bc1bb1ed1544bf679}
-}
+  howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},
+  doi = {tbd}
+}`
 
 # License
 This project is licensed under the terms of the GNU General Public License v3.0  (`gpl-3.0`). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
@@ -18,7 +18,7 @@ This project is licensed under the terms of the GNU General Public License v3.0 
 # TL;DR // Quickstart
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it:
 
-1. Apply for [Academic Research access](https://developer.twitter.com/en/products/twitter-api/academic-research) to the Twitter API v2. This givs you a bearer token. Perhaps have your team members apply, too. The script can use more than one bearer token at a time, thus increasing pull limits.
+1. Apply for [Academic Research access](https://developer.twitter.com/en/products/twitter-api/academic-research) to the Twitter API v2. This gives you a bearer token. Perhaps have your team members apply, too. The script can use more than one bearer token at a time, thus increasing pull limits.
 2. Install the Python3 dependencies for the script (see below).
 3. Clone this repo to a local folder under which data will be saved.
 4. Set bearer token(s) in the `parameters.py` together with scrape parameters (see below).
@@ -28,7 +28,7 @@ This script live scrapes the IDs of liking and/or retweeting users of tweets tha
 ### TODO: Dependencies:
 `python3`  
 `pip`  
-`python3 -m pip install --upgrade pip`
+`python3 -m pip install --upgrade pip`  
 python dependencies (pip install the following packages): `datetime`, `requests`, `os`, `glob`, `json`, `pandas`, `csv`, `dateutil.parser`, `unicodedata`, `time`, `numpy`, `warnings`
 
 ## Long Version
@@ -68,13 +68,12 @@ At the end of the observation period and once every logged tweet is no longer tr
 Shorter track time
 
 ### Issue 3: Still not enough: Bearer token cycling
-
+In `parameters.py` you can specify multiple bearer token. The script cycles through the tokens you provide and uses each bearer token approx. evenly, that is at every time interval tokens are switched.
 
 ### Issue 4: Connection Errors and Script Restarting
-Why run.sh
+If the script runs into errors, e.g. connection errors, the script restarts automatically and continues where it left of.
 
-*TODO: Update this:*
-
+This is done through the `run.sh`. You initially need to run `run.sh` in a terminal.
 This file
  1. preps the folder,
  2. starts scripting to a log file, and
@@ -129,8 +128,8 @@ Three Twitter limits are relevant:
 `my_sleepTime = 5*60` : How many seconds should we wait between two pull loops?
 - This should be balanced with alarmLevel, topGet and the number of bearer tokens available.
 - For example:
-    - *TODO: change param names here to those above:* 1 bearer token, `alarmLevel = 1`, `topGet = 75`, `sleepTime = 1` and a search query that has some activity will quickly break `LUR` limit.
-    - 3 bearer tokens, `alarmLevel = 1`, `topGet = 24`, `sleepTime = 5*60` will not.
+    - 1 bearer token, `my_alarmLevel = 1`, `my_getLikersTop = 75`, `my_sleepTime = 1` and a search query that has some activity will quickly break `LUR` limit.
+    - 3 bearer tokens, `my_alarmLevel = 1`, `my_getLikersTop = 24`, `my_sleepTime = 5*60` will not.
 - Lower `sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
 - Higher `sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
 
