@@ -2,17 +2,17 @@
 
 This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as:  
 
-Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022. 
+Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022.
 
 ```
   @misc{JahnRendsvig22,  
-  author = {{Jahn, Laura and Rendsvig, Rasmus K.}}, 
-  title = {Get-Twitter-Likers-Data},  
-  year = {2022},  
-  publisher = {GitHub},  
-  journal = {GitHub repository},  
-  howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},  
-  doi = {tbd}  
+    author = {{Jahn, Laura and Rendsvig, Rasmus K.}},
+    title = {Get-Twitter-Likers-Data},  
+    year = {2022},  
+    publisher = {GitHub},  
+    journal = {GitHub repository},  
+    howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},  
+    doi = {tbd}  
   }
  ```
 
@@ -69,7 +69,7 @@ During the observation period, with a fixed time interval p (e.g. every 5 min.),
 At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO: double check this following sentence!_ Pulling liking and retweeting users devours from the same pool of request resources.
 
 ### Issue 2: 10.000.000 a month
-If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Paramters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
+If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Parameters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
 
 ### Issue 3: Still not enough: Bearer token cycling
 In `parameters.py` you can specify multiple bearer token. The script cycles through the tokens you provide and uses each bearer token approx. evenly, that is at every time interval tokens are switched.
