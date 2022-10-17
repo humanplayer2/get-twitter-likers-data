@@ -26,8 +26,8 @@ This script live scrapes the IDs of liking and/or retweeting users of tweets tha
 6. Analyze your data.
 
 ### TODO: Dependencies:
-`python3`
-`pip`
+`python3`  
+`pip`  
 `python3 -m pip install --upgrade pip`
 python dependencies (pip install the following packages): `datetime`, `requests`, `os`, `glob`, `json`, `pandas`, `csv`, `dateutil.parser`, `unicodedata`, `time`, `numpy`, `warnings`
 
