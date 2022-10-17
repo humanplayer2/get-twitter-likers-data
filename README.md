@@ -66,7 +66,7 @@ During the observation period, with a fixed time interval p (e.g. every 5 min.),
 
 4. It requests the 100 most recent liking users of the top n tweets with the highest delta above a set threshold (e.g., has minimum 25 new likes).
 
-At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO_conform: Pulling liking and retweeting users devours from the same bucket of request resources.
+At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. <!---This is a comment: TODO_confirm: Pulling liking and retweeting users devours from the same bucket of request resources.-->
 
 ### Issue 2: 10.000.000 a month: Shorter tweet track time
 If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Parameters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
@@ -134,8 +134,8 @@ Three Twitter limits are relevant:
 - For example:
     - 1 bearer token, `my_alarmLevel = 1`, `my_getLikersTop = 75`, `my_sleepTime = 1` and a search query that has some activity will quickly break `LUR` limit.
     - 3 bearer tokens, `my_alarmLevel = 1`, `my_getLikersTop = 24`, `my_sleepTime = 5*60` will not.
-- Lower `sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
-- Higher `sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
+- Lower `my_sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
+- Higher `my_sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
 
 ## Logging
 
