@@ -3,7 +3,7 @@
 This is the repository *Get-Twitter-Likers-Data*. If you use this code in your research, please cite:
 
 # License
-This project is licensed under the terms of the GNU General Public License v3.0. See for [LICENSE]() rights and limitations.
+This project is licensed under the terms of the GNU General Public License v3.0. See for [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) rights and limitations.
 
 # TL;DR // Quickstart
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it:
