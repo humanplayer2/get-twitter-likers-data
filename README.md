@@ -46,7 +46,7 @@ Those interested in logging a full list of all liking (retweeting) tusers of a t
 
 At time of writing, Twitter has the following rate restrictions and caps on requests to the Academic Research access API:
 - Tweets per 30 days are capped at 10.000.000, i.e. one can pull maximally 10.000.000 tweet objects per month ([documentation](https://developer.twitter.com/en/docs/twitter-api/tweet-caps))
-- The endpoints to get [liking users](https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users) and [retweeting users](https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by) are capped at 75 requests per 15 minute window, delivering the most recent liking/retweeting users per tweet per request.
+- The endpoints to get [liking users](https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users) and [retweeting users](https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by) are capped at 75 requests per 15 minute window, delivering the 100 most recent liking/retweeting users per tweet per request.
 
 Hence, there is no way to get the IDs of *all* liking users of a tweet if it already has 105 likes.
 
