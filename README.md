@@ -1,9 +1,19 @@
 # Get-Twitter-Likers-Data
 
-This is the repository *Get-Twitter-Likers-Data*. If you use this code in your research, please cite:
+This is the repository *Get-Twitter-Likers-Data*. If you use this code in your research, please cite
+
+@misc{Charles2013,
+  author = {Charles, P.W.D.},
+  title = {Project Title},
+  year = {2013},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/charlespwd/project-title}},
+  commit = {4f57d6a0e4c030202a07a60bc1bb1ed1544bf679}
+}
 
 # License
-This project is licensed under the terms of the GNU General Public License v3.0. See for [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) rights and limitations.
+This project is licensed under the terms of the GNU General Public License v3.0  (`gpl-3.0`). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
 
 # TL;DR // Quickstart
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query. To use it:
@@ -16,10 +26,10 @@ This script live scrapes the IDs of liking and/or retweeting users of tweets tha
 6. Analyze your data.
 
 ### TODO: Dependencies:
-python3
-pip
-python3 -m pip install --upgrade pip ...
-python dependencies (pip install the following packages): datetime, requests, os, glob, json, pandas, csv, dateutil.parser, unicodedata, time, numpy, warnings
+`python3`
+`pip`
+`python3 -m pip install --upgrade pip`
+python dependencies (pip install the following packages): `datetime`, `requests`, `os`, `glob`, `json`, `pandas`, `csv`, `dateutil.parser`, `unicodedata`, `time`, `numpy`, `warnings`
 
 ## Long Version
 
