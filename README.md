@@ -1,16 +1,20 @@
 # Get-Twitter-Likers-Data
 
-This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as _Jahn, L. and Rendsvig, R.K., "Get-Twitter-Likers-Data, GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022._  
+This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as:  
 
-`@misc{JahnRendsvig22,  
-  author = {{Jahn, Laura and Rendsvig, Rasmus K.}},  
+Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022. 
+
+```
+  @misc{JahnRendsvig22,  
+  author = {{Jahn, Laura and Rendsvig, Rasmus K.}}, 
   title = {Get-Twitter-Likers-Data},  
   year = {2022},  
   publisher = {GitHub},  
   journal = {GitHub repository},  
   howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},  
   doi = {tbd}  
-  }`
+  }
+ ```
 
 # License
 This project is licensed under the terms of the GNU General Public License v3.0  (`gpl-3.0`). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
@@ -35,10 +39,10 @@ python dependencies (pip install the following packages): `datetime`, `requests`
 
 All below refers to Twitter's v2 public API for _Academic Research access_. You have to apply for that [here](https://developer.twitter.com/en/products/twitter-api/academic-research/application-info).
 
-The script works for getting the IDs of both liking users and retweeting users. The below omits reference to retweeting users to simplify the text.
+The script works for getting the IDs of both liking users and reweeting users. The below omits reference to retweeting users to simplify the text.
 
 ### Raison d'Etre: Twitter Data Restrictions
-Those interested in logging a full list of all liking (retweeting) users of a tweet face soon face Twitter data restrictions.
+Those interested in logging a full list of all liking (retweeting) tusers of a tweet face soon face Twitter data restrictions.
 
 At time of writing, Twitter has the following rate restrictions and caps on requests to the Academic Research access API:
 - Tweets per 30 days are capped at 10.000.000, i.e. one can pull maximally 10.000.000 tweet objects per month ([documentation](https://developer.twitter.com/en/docs/twitter-api/tweet-caps))
@@ -52,7 +56,7 @@ These caps on requests pose a number of issues that this script sidesteps.
 
 For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the basic idea of this script:
 
-During the observation period, with a fixed time interval p (e.g. every 5 min.), the script executes a pull. Each pull loop contains four steps:
+During the observation period, with a fixed time interval p (e.g. every 5 min.), the script executes a pull loop. Each pull loop contains four steps:
 
 1. It logs tweets posted since the last pull that satisfy the query, and logs their current number of likes (like count).
 
@@ -62,10 +66,10 @@ During the observation period, with a fixed time interval p (e.g. every 5 min.),
 
 4. It requests the 100 most recent liking users of the top n tweets with the highest delta above a set threshold (e.g., has minimum 25 new likes).
 
-At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. Pulling liking and retweeting users devours from the same pool of request resources.
+At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO: double check this following sentence!_ Pulling liking and retweeting users devours from the same pool of request resources.
 
 ### Issue 2: 10.000.000 a month
-Shorter track time
+If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Paramters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
 
 ### Issue 3: Still not enough: Bearer token cycling
 In `parameters.py` you can specify multiple bearer token. The script cycles through the tokens you provide and uses each bearer token approx. evenly, that is at every time interval tokens are switched.
@@ -86,9 +90,9 @@ List mimicks the `parameters.py` files, with additional comments.
 
 ## What to pull
 
-`my_getLikers = False` : Do you want to save liking users?
+`my_getLikers = True` : Do you want to save liking users?
 
-`my_getRetweeters = True` : Do you want to save retweeting users?
+`my_getRetweeters = False` : Do you want to save retweeting users?
 
 `my_keyWord = "#dkpol -is:retweet OR #maga"` : What tweets are you looking for?
 
@@ -104,7 +108,7 @@ List mimicks the `parameters.py` files, with additional comments.
 
 `my_tweetTrackTime = datetime.timedelta(hours = 72)` : How long should each tweet be monitored for new likes?
 - Longer tweetTrackTime means more requests used per 15 minutes and more tweets pulled per month.
- - (1 `TPL` request will be used per 500 tweets meets `my_keyWord`, per pull loop.)
+ - (1 `TPL` request will be used per tweet meeting `my_keyWord`, per pull loop.)
 - Mind your limits!
 
 ## How aggressively to pull
@@ -123,7 +127,7 @@ Three Twitter limits are relevant:
 `my_getLikersTop = 25` : How many of the tweets with more than alarmLevel new likes should we get the liking users of?
 `my_getRetweetersTop = 10` : Ditto for retweeters.
 - We pull the liking users of the tweets with most new likes first, but given `LUR` limit, maybe not all tweets that have raised an alarm can have their likers pulled within 15 min.
-- Again: Mind your limits! Safety rule is: `my_getLikersTop + my_getRetweetersTop <= 75*(my_sleepTime/(15*60))*len(tokenList)`
+- Again: Mind your limits! Safety rule is: `my_getLikersTop + my_getRetweetersTop <= 75*(my_sleepTime in sec/(15*60))*len(tokenList)`
 
 `my_sleepTime = 5*60` : How many seconds should we wait between two pull loops?
 - This should be balanced with alarmLevel, topGet and the number of bearer tokens available.
