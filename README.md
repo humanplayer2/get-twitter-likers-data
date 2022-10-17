@@ -2,9 +2,6 @@
 
 This script live scrapes the IDs of liking and/or retweeting users of tweets that fall under some query.
 
-<!---
-This is the repository **Get-Twitter-Likers-Data**.
---->
 If you use this code in academic research, please cite this repository as:
 
 Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/)<!---, DOI: tbd-->, 2022.
@@ -21,11 +18,6 @@ Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repositor
  ```
 <!---, add doi when ready
     doi = {tbd}-->
-<!---
-The license is shown in the About pane on the right, so I don't think there is a need to mention it.
-## License
-This project is licensed under the terms of the GNU General Public License v3.0 (gpl-3.0). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
---->
 
 # TL;DR // Quickstart
 To use the script:
@@ -167,3 +159,6 @@ Three Twitter limits are relevant:
 - Useful to check if a pull for sure missed out on some likers/retweeters.
 - Useful to estimate parameters, as the data allows you to check e.g. how many times a too high delta was seen.
 - Might end up taking up a lot of harddrive space for long running pulls.
+
+# License
+This project is licensed under the terms of the GNU General Public License v3.0 (gpl-3.0). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
