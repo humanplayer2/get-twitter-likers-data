@@ -52,7 +52,7 @@ Hence, there is no way to get the IDs of *all* liking users of a tweet if it alr
 
 These caps on requests pose a number of issues that this script sidesteps.
 
-### Issue 1: 100 most recent likers
+### Issue 1: 100 most recent likers: time intervals
 
 For the tweet with 105 likes: if we had requested the liking users when it only had 75 likes and again at a 105, we would have gotten them all. And that's the basic idea of this script:
 
@@ -68,13 +68,13 @@ During the observation period, with a fixed time interval p (e.g. every 5 min.),
 
 At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same. _TODO: double check this following sentence!_ Pulling liking and retweeting users devours from the same pool of request resources.
 
-### Issue 2: 10.000.000 a month
+### Issue 2: 10.000.000 a month: shorter tweet track time
 If you believe you will request more then 10.000.000 tweets a month, you can consider tracking each tweet for a shorter period of time (see `my_tweetTrackTime` in _Parameters Overview_ below. Keep in mind that during the tracking time of tweets, tweets are repeatedly requested.
 
 ### Issue 3: Still not enough: Bearer token cycling
 In `parameters.py` you can specify multiple bearer token. The script cycles through the tokens you provide and uses each bearer token approx. evenly, that is at every time interval tokens are switched.
 
-### Issue 4: Connection Errors and Script Restarting
+### Issue 4: Connection Errors: Script automatically restarts
 If the script runs into errors, e.g. connection errors, the script restarts automatically and continues where it left of.
 
 This is done through the `run.sh`. You initially need to run `run.sh` in a terminal.
