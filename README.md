@@ -2,15 +2,15 @@
 
 This is the repository **Get-Twitter-Likers-Data**. If you use this code in your research, please cite this repository as _Jahn, L. and Rendsvig, R.K., "Get-Twitter-Likers-Data, GitHub Repository, [https://github.com/humanplayer2/get-twitter-likers-data/](https://github.com/humanplayer2/get-twitter-likers-data/), DOI: tbd, 2022._  
 
-`@misc{JahnRendsvig22,<br>
-  author = {{Jahn, Laura and Rendsvig, Rasmus K.}},
-  title = {Get-Twitter-Likers-Data},
-  year = {2022},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},
-  doi = {tbd}
-}`
+`@misc{JahnRendsvig22,  
+  author = {{Jahn, Laura and Rendsvig, Rasmus K.}},  
+  title = {Get-Twitter-Likers-Data},  
+  year = {2022},  
+  publisher = {GitHub},  
+  journal = {GitHub repository},  
+  howpublished = {\url{https://github.com/humanplayer2/get-twitter-likers-data/}},  
+  doi = {tbd}  
+  }`
 
 # License
 This project is licensed under the terms of the GNU General Public License v3.0  (`gpl-3.0`). See [LICENSE](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/LICENSE.md) for rights and limitations.
