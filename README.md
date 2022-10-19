@@ -26,8 +26,10 @@ To use the script:
 2. Install the Python3 dependencies for the script (see below).
 3. Clone this repo to a local folder under which data will be saved.
 4. Set bearer token(s) in the `parameters.py` together with scrape parameters [(see below)](https://github.com/humanplayer2/get-twitter-likers-data#parameters-overview).
-5. Run `run.sh` in a terminal and wait for a `CompletePull-$STARTTIME` folder to materialize.
+5. Run `run.sh` (or `run-fancy.sh`)\* in a terminal and wait for a `CompletePull-$STARTTIME` folder to materialize.
 6. Analyze your data.
+
+\*: `run-fancy.sh` is also suited for manual restarts e.g. handy for parameter tuning, but less tested as we are currently using all our tokens.
 
 ## Dependencies:
 `python3`  
@@ -36,7 +38,7 @@ To use the script:
 
 # Long Version
 
-All below refers to Twitter's v2 public API for _Academic Research access_. You have to apply for that [here](https://developer.twitter.com/en/products/twitter-api/academic-research/application-info).
+All below refers to Twitter's v2 public API for _Academic Research access._ You have to apply for that [here](https://developer.twitter.com/en/products/twitter-api/academic-research/application-info).
 
 The script works for getting the IDs of both liking users and reweeting users. The below omits reference to retweeting users to simplify the text.
 
@@ -60,11 +62,13 @@ During the chosen observation period, with a fixed time interval (e.g. every 5 m
 
 2. It updates the logged like count of previously logged tweets. Only tweets that are recent enough are _tracked_ (e.g., posted within the last 48 hours). The track time is a script parameter.
 
-3. For each logged tweet, it compares the tweet's new like count to its like count at the last pull where the script requested the liking users of the tweet (0 if the liking users have never been requested). Call the numerical difference between these two like counts the tweet's _delta_.
+3. For each logged tweet, it compares the tweet's new like count to its like count at the last pull where the script requested the liking users of the tweet (0 if the liking users have never been requested). Call the numerical difference between these two like counts the tweet's _delta._
 
 4. It requests the 100 most recent liking users of the top _n_ tweets with the highest delta above a set _threshold_ (e.g., has minimum 25 new likes). Both _n_ and the threshold are script parameters.
 
-At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets is requested one final time (in appropriately time batches). The script also allows pulling retweeting users in the pull loop. The logic is the same.
+At the end of the observation period and once every logged tweet is no longer tracked, the liking users of all logged tweets may be set to be requested one final time (in appropriately time batches) during the _final harvest._
+
+**Retweeting users** can be collected in all the same ways that liking users can. The logic is the same.
 
 ## Issue 2: 10.000.000 a month: Shorter tweet track time
 10.000.000 tweets a month may sound like a lot, but they run out quickly. Consider scraping a keyword that gets 
@@ -151,6 +155,19 @@ Three Twitter limits are relevant:
     - 3 bearer tokens, `my_alarmLevel = 1`, `my_getLikersTop = 24`, `my_sleepTime = 5*60` will not.
 - Lower `my_sleepTime` uses more `TPR` and pulls more tweets, counting towards `TPL`.
 - Higher `my_sleepTime` means more time for new likes to accummulate, and thus raises the risk of missing out on some liking users.
+
+## Final Harvest
+`my_likersFinalHarvest = True`
+`my_likersAtLeast = 3`
+- **Pull 100 most recent likers of _all_ logged tweets with at least `my_likersAtLeast` likes?**
+- Used to get likers/retweeters of tweets with deltas lower than `my_alarmLevel`.
+- May get likers of tweets for which likers have never been gotten before. E.g., if `my_alarmLevel > my_likersAtLeast`.
+- May take some time, but is set up to be as speedy as possible.
+- Final harvests **DO NOT AUTOMATICALLY RESTART** in case of errors.
+
+`my_retweetersFinalHarvest = False`
+`my_retweetersAtLeast = 6`
+- As above, but for retweeters.
 
 ## Logging
 `my_saveLogs = True`
