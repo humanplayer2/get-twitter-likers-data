@@ -27,7 +27,7 @@ To use the script:
 3. Clone this repo to a local folder under which data will be saved.
 4. Set bearer token(s) in the `parameters.py` together with scrape parameters [(see below)](https://github.com/humanplayer2/get-twitter-likers-data#parameters-overview).
 5. Run `run.sh` (or `run-fancy.sh`)\* in a terminal and wait for a `CompletePull-$STARTTIME` folder to materialize.
-6. Preprocess and inspect your data. We have shared code to do so here: [data-preprocessing-inspection] (https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection).
+6. Preprocess and inspect your data. We have shared code to do so here: [data-preprocessing-inspection](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection).
 
 \*: `run-fancy.sh` is also suited for manual restarts e.g. handy for parameter tuning, but less tested as we are currently using all our tokens.
 
@@ -179,7 +179,7 @@ Three Twitter limits are relevant:
 
 ## Preprocess and inspect the collected data
 
-For preprocessing and inspection the collected data, we have shared code to do so here: [data-preprocessing-inspection] (https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection). among many possible ways into which format to preprocess the data into, we preprocess the collected data into tweet-user dataframes, where entry(i,j) evaluates to 1, if user j has liked tweet i. We add some code to plot and calclate properties of the data.
+For preprocessing and inspection the collected data, we have shared code to do so here: [data-preprocessing-inspection](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection). Among many possible ways into which format to preprocess the data into, we preprocess the collected data into tweet-user dataframes, where entry(i,j) evaluates to 1, if user j has liked tweet i. We add some code to plot and calclate properties of the data.
 
 
 # License
