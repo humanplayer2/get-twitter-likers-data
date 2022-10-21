@@ -179,7 +179,7 @@ Three Twitter limits are relevant:
 
 ## Preprocess and inspect the collected data
 
-For preprocessing and inspection the collected data, we have shared code to do so here: [data-preprocessing-inspection](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection). Among many possible ways into which format to preprocess the data into, we preprocess the collected data into tweet-user dataframes, where entry(i,j) evaluates to 1, if user j has liked tweet i. We add some code to plot and calclate properties of the data.
+For preprocessing and inspecting the collected data, we have shared code to do so here: [data-preprocessing-inspection](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection). Among many possible ways how and into which format to preprocess the data, we preprocess the collected data into tweet-user dataframes, where entry(i,j) evaluates to 1, if user j has liked tweet i. We add some code to plot and calculate properties of the data.
 
 
 # License
