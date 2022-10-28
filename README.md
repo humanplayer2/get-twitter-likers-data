@@ -187,9 +187,10 @@ Three Twitter limits are relevant:
 # After Data Collection
 
 ## Data Structure
-Once the collection script has completed, you should see a folder named `Pull-DD-MM-YYYY-hour:minute:second` with the time set to when you started the scrape. All data from the scrape is in that folder, structured as follows:
+Once the collection script has completed, you should see a folder named `Pull-START` with `START` the time (`DD-MM-YYYY-hour:minute:second`) you started the scrape. All data from the scrape is in that folder, structured as follows:
 
-   Pull-
+    Pull-START
+    │
     ├── CSVs
     │    ├── Likers_of_alarms                     # Files of liking users:
     │    │     └── Likers_of_alarms_TIME.csv      # Each contains only the liking users collected at TIME
