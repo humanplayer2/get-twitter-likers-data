@@ -19,6 +19,13 @@ Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repositor
 <!---, add doi when ready
     doi = {tbd}-->
 
+## Table of Content:
+1. [TL;DR // Quickstart](#tl;dr-//-quickstart)
+2. [Long Version](#long-version)
+3. [Parameters Overview](#parameters-overview)
+4. [After Data Collection](#after-data-collection)
+
+
 # TL;DR // Quickstart
 To use the script:
 
@@ -177,7 +184,24 @@ Three Twitter limits are relevant:
 - Useful to estimate parameters, as the data allows you to check e.g. how many times a too high delta was seen.
 - Might end up taking up a lot of harddrive space for long running pulls.
 
-## Preprocess and inspect the collected data
+# After Data Collection
+
+## Data Structure
+Once the collection script has completed, you should see a folder named `Pull-DD-MM-YYYY-hour:minute:second` with the time set to when you started the scrape. All data from the scrape is in that folder, structured as follows:
+
+   Pull-
+    ├── CSVs
+    │    ├── Likers_of_alarms                     # Files of liking users:
+    │    │     └── Likers_of_alarms_TIME.csv      # Each contains only the liking users collected at TIME
+    │    ├── Retweeters_of_alarms                 # Files of retweeting users:
+    │    │     └── Retweeters_of_alarms_TIME.csv  # Each contains only the retweeting users collected at TIME
+    │    └── TIME.csv                             # Info of all tweets tracked at TIME, e.g. text, like count, etc.
+    │
+    ├── parameters.py                             # Parameters as set when scrape started
+    ├── likers_final_harvest_complete.pkl         # Liking users collected during final harvest
+    └── retweeters_final_harvest_complete.pkl     # Retweeting users collected during final harvest
+
+## Data Processing and Inspection
 
 For preprocessing and inspecting the collected data, we have shared code to do so here: [data-preprocessing-inspection](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/data-preprocessing-inspection). Among many possible ways how and into which format to preprocess the data, we preprocess the collected data into tweet-user dataframes, where entry(i,j) evaluates to 1, if user j has liked tweet i. We add some code to plot and calculate properties of the data.
 
