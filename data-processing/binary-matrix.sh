@@ -26,9 +26,9 @@ case "$ynchoice" in
         Great, I will build the matrices for $NEWEST
         This may take a bit!${NORMAL}\n"
         export NEWEST
-        python3 -c "import os; from resources import processing;\
-                    processing.aggegate_likers(os.getenv('NEWEST'));\
-                    processing.aggegate_retweeters(os.getenv('NEWEST'))"
+        python3 -c "import os; from resources import binarymatrix;\
+                    binarymatrix.aggegate_likers(os.getenv('NEWEST'));\
+                    binarymatrix.aggegate_retweeters(os.getenv('NEWEST'))"
         printf "${MAGENTA_BLINK}\n  DONE!${NORMAL}\n\n";;
   n|N ) printf "
         Then please supply the path of the pull data folder:${ORANGE}
@@ -42,9 +42,9 @@ case "$ynchoice" in
         and will build the matrices. 
         This may take a bit!${NORMAL}\n"
       export CHOICE
-      python3 -c "import os; from resources import processing;\
-                  processing.aggegate_likers(os.getenv('CHOICE'));\
-                  processing.aggegate_retweeters(os.getenv('CHOICE'))"
+      python3 -c "import os; from resources import binarymatrix;\
+                  binarymatrix.aggegate_likers(os.getenv('CHOICE'));\
+                  binarymatrix.aggegate_retweeters(os.getenv('CHOICE'))"
       printf "${MAGENTA_BLINK}\n  DONE!${NORMAL}\n\n"
     else
       printf "${RED}\n        Sorry, I can't find that directory.${NORMAL}\n"; exit;
