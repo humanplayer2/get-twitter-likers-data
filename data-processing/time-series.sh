@@ -27,8 +27,8 @@ case "$ynchoice" in
         Nice. Just for you, I will put together the dataframes for $NEWEST
         This may take a bit!${NORMAL}\n"
         export NEWEST
-        python3 -c "import os; from resources import overtime;\
-                    overtime.overtime(os.getenv('NEWEST'))"
+        python3 -c "import os; from resources import timeseries;\
+                    timeseries.timeseries(os.getenv('NEWEST'))"
         printf "${MAGENTA_BLINK}\n  DONE!${NORMAL}\n\n";;
   n|N ) printf "
         Then please supply the path of the pull data folder:${ORANGE}
@@ -42,8 +42,8 @@ case "$ynchoice" in
         and will build the matrices. 
         This may take a bit!${NORMAL}\n"
       export CHOICE
-      python3 -c "import os; from resources import overtime;\
-                  overtime.overtime(os.getenv('CHOICE'))"
+      python3 -c "import os; from resources import timeseries;\
+                  timeseries.timeseries(os.getenv('CHOICE'))"
       printf "${MAGENTA_BLINK}\n  DONE!${NORMAL}\n\n"
     else
       printf "${RED}\n        Sorry, I can't find that directory.${NORMAL}\n"; exit;
