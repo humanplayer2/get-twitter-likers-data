@@ -1,2 +1,6 @@
 .DS_Store
 .directory
+data-processing/resources/__pycache__
+Pull-test-dir
+Pull-Big
+Pull-Med
