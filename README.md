@@ -41,7 +41,7 @@ To use the script:
 ## Dependencies:
 `python3`  
 `pip`  
-`python3 -m pip install --upgrade pip requests os glob csv json numpy pandas datetime dateutil.parser time unicodedata   warnings`
+`python3 -m pip install --upgrade pip requests glob csv json numpy pandas datetime dateutil.parser time unicodedata   warnings`
 
 # Long Version
 
