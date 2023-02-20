@@ -38,6 +38,13 @@ To use the script:
 
 \*: `run-fancy.sh` is also suited for manual restarts e.g. handy for parameter tuning, but less tested as we are currently using all our tokens.
 
+## * Important Notes with respect to Updates of the Twitter API*
+
+1. On February 2, 2023, Twitter announced that the platform will discontinue the free access to its APIs. Twitter confirmed on February 10, 2023 that the Academic Research API, on which this repository relies, is included in this discontinuation. While the data we have collected via this script is of value in its accessible and archived version on Harvard Dataverse [Link follows soon](), we and the research community loose access to reproduce, replicate, and supplement the data. The scripted algorithm, meant as a tool for the research community to collect their own datasets, may not be usable in its current form after February 13. At the time of writing, it is unclear what a “low-level” API usage for $100 entails, and whether volume-scaled fees (e.g., per request) apply beyond low-level usage. If the latter becomes an option to upgrade usage, the algorithm may prove helpful as it can be parametrized to spend requests smartly and frugally during live-collection.
+
+2. During work on this project (2021, 2022), Twitter changed their endpoints for collecting data on liking and retweeting users to allow for *pagination*. *The script in its current form does not use pagination*. Pagination allows to collect all liking and retweeting users of a tweet, yet subject to request limits. With pagination, results—lists of 100 users per request—are delivered in reverse-chronological order. The limit of maximally 75 requests per 15 minutes windows remains unchanged. Together, instead of only being allowed to collect the most recent 100 liking or retweeting users per tweet, one may now collect up to 7,500 liking or retweeting users per 15 minutes on one tweet, and continue to request even more users after a 15 minutes period of pause. The first page of results typically contains the most recent users, and the last one the oldest. Prior to this change, Twitter only allowed to retrieve the first page. This restriction iniially motivated our live-collection approach surveying engagement metrics of tweets to prioritize request allocation to high-engagement tweets.
+
+
 ## Dependencies:
 `python3`  
 `pip`  
