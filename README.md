@@ -18,6 +18,19 @@ Jahn, Laura and Rendsvig, Rasmus K., "Get-Twitter-Likers-Data", GitHub Repositor
  ```
 <!---, add doi when ready
     doi = {tbd}-->
+    
+Related publication:
+ 
+```
+  @article{JahnRendsvig23,  
+    author = {{Jahn, Laura and Rendsvig, Rasmus~K.}},
+    title = {Towards Detecting Inauthentic Coordination in Twitter Likes Data},  
+    year = {2023},
+    publisher = {ArXiv},  
+    howpublished = {\url{tbd}}
+  }
+ ```
+ 
 
 ## Table of Content:
 1. [TL;DR // Quickstart](#tl;dr-//-quickstart)
@@ -44,6 +57,8 @@ To use the script:
 Retweeting Users)*](https://doi.org/10.7910/DVN/WRUNZD), we and the research community loose access to reproduce, replicate, and supplement the data. The scripted algorithm, meant as a tool for the research community to collect their own datasets, may not be usable in its current form after February 13. At the time of writing, it is unclear what a “low-level” API usage for $100 entails, and whether volume-scaled fees (e.g., per request) apply beyond low-level usage. If the latter becomes an option to upgrade usage, the algorithm may prove helpful as it can be parametrized to spend requests smartly and frugally during live-collection.
 
 2. During work on this project (2021, 2022), Twitter changed their endpoints for collecting data on liking and retweeting users to allow for *pagination*. *The script in its current form does not use pagination*. Pagination allows to collect all liking and retweeting users of a tweet, yet subject to request limits. With pagination, results—lists of 100 users per request—are delivered in reverse-chronological order. The limit of maximally 75 requests per 15 minutes windows remains unchanged. Together, instead of only being allowed to collect the most recent 100 liking or retweeting users per tweet, one may now collect up to 7,500 liking or retweeting users per 15 minutes on one tweet, and continue to request even more users after a 15 minutes period of pause. The first page of results typically contains the most recent users, and the last one the oldest. Prior to this change, Twitter only allowed to retrieve the first page. This restriction iniially motivated our live-collection approach surveying engagement metrics of tweets to prioritize request allocation to high-engagement tweets.
+
+Please also see Chapter 1 of [Laura Jahn's Ph.D. thesis](https://github.com/humanplayer2/get-twitter-likers-data/blob/main/documents/Jahn_Laura_PhD_Thesis_2023_online.pdf) that extensively discusses this. We add the thesis to this repository [here](https://github.com/humanplayer2/get-twitter-likers-data/tree/main/documents).
 
 
 ## Dependencies:
