@@ -27,7 +27,7 @@ Related publication:
     title = {Towards Detecting Inauthentic Coordination in Twitter Likes Data},  
     year = {2023},
     publisher = {ArXiv},  
-    howpublished = {\url{tbd}}
+    howpublished = {\url{https://arxiv.org/abs/2305.07384}}
   }
  ```
  
